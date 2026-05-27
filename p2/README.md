@@ -1,42 +1,41 @@
-# Part 2 - Deploy apps with Kubernetes manifests
+# Partie 2 - Déployer des applications avec des manifests Kubernetes
 
-*This project was created as part of the 42 curriculum by jmougel, klombard, and mmorot.*
+*Ce projet a été réalisé dans le cadre du cursus 42 par jmougel, klombard et mmorot.*
 
-
-[Back](../README.md)
+[Retour](../README.md)
 
 ## Description
 
-Part 2 of this project consists of creating, on a virtual machine using Vagrant, a single-node K3s cluster hosting 3 web applications.
+La partie 2 de ce projet consiste à créer, sur une machine virtuelle à l’aide de Vagrant, un cluster K3s à nœud unique hébergeant 3 applications web.
 
-Each application displays the name of the Pod being accessed.  
-The second application is deployed with 3 replicas in order to distribute traffic and improve availability.
+Chaque application affiche le nom du Pod sur lequel la requête est traitée.  
+La deuxième application est déployée avec **3 réplicas** afin de répartir le trafic et d’améliorer la disponibilité.
 
-### Manifest Types Used
+### Types de manifests utilisés
 
-* **Deployment**: used to deploy and manage an application by creating and maintaining ReplicaSets and Pods.
-* **Service**: used to provide a stable network endpoint for a set of Pods and make the application reachable from within the cluster.
-* **Ingress**: used to route external HTTP requests to the appropriate Service based on the requested host.
+* **Deployment** : utilisé pour déployer et gérer une application en créant et en maintenant des ReplicaSets et des Pods.
+* **Service** : utilisé pour fournir un point d’accès réseau stable à un ensemble de Pods et rendre l’application accessible depuis l’intérieur du cluster.
+* **Ingress** : utilisé pour router les requêtes HTTP externes vers le Service approprié selon l’hôte demandé.
 
-The Docker image used for this exercise is:
+L’image Docker utilisée pour cet exercice est :
 
 * `paulbouwer/hello-kubernetes:1`
 
-## Constraints
+## Contraintes
 
-* Only one virtual machine with the latest stable version of the distribution of your choice.
-* K3s must be installed in server mode.
-* Set up 3 web applications of your choice.
-* The applications must be accessible depending on the **HOST** used when making a request to the IP address **192.168.56.110**.
-* The name of this machine must be your login followed by **S**.
-* When a client enters the IP address **192.168.56.110** in their browser with the host **app1.com**, the server must display **app1**.
-* When the host **app2.com** is used, the server must display **app2**.
-* Otherwise, **app3** must be selected by default.
+* Une seule machine virtuelle avec la dernière version stable de la distribution de votre choix.
+* K3s doit être installé en mode serveur.
+* Mettre en place 3 applications web de votre choix.
+* Les applications doivent être accessibles selon le **HOST** utilisé lors d’une requête vers l’adresse IP **192.168.56.110**.
+* Le nom de cette machine doit être votre login suivi de **S**.
+* Lorsqu’un client entre l’adresse IP **192.168.56.110** dans son navigateur avec l’hôte **app1.com**, le serveur doit afficher **app1**.
+* Lorsque l’hôte **app2.com** est utilisé, le serveur doit afficher **app2**.
+* Sinon, **app3** doit être sélectionnée par défaut.
 
-## Tech Stack
+## Stack technique
 
-* **Languages:** Bash, YAML
-* **Tools:** Vagrant, K3s
+* **Langages :** Bash, YAML
+* **Outils :** Vagrant, K3s
 
 ## Instructions
 
@@ -48,36 +47,36 @@ cd InceptionOfThings/p2
 make up
 ```
 
-Make sure the following tools are installed on your system:
+Assurez-vous que les outils suivants sont installés sur votre système :
 
 * Make
 * Vagrant
 * VirtualBox
 
-Make sure the following hosts are in your /etc/hosts file:
+Assurez-vous que les hôtes suivants sont présents dans votre fichier `/etc/hosts` :
 
-| IP Address | Host |
+| Adresse IP | Hôte |
 |------------|------|
 | `192.168.56.110` | `app1.local` |
 | `192.168.56.110` | `app2.local` |
 | `192.168.56.110` | `app3.local` |
 
-### Usage
+### Utilisation
 
-A **Makefile** is provided to make the project easier to run. The following commands are available:
+Un **Makefile** est fourni pour faciliter l’exécution du projet. Les commandes suivantes sont disponibles :
 
-| Command | Description |
+| Commande | Description |
 |---------|-------------|
-| `make up` | Starts the Vagrant virtual machine. |
-| `make down` | Stops the Vagrant virtual machine properly. |
-| `make provision` | Reprovisions the Vagrant virtual machine if the scripts have been updated. |
-| `make fclean` | Removes the Vagrant virtual machine and its cached files. |
-| `make test` | Runs `curl` requests against each application to verify that host-based routing is working correctly. |
-| `make help` | Displays the list of available commands. |
+| `make up` | Démarre la machine virtuelle Vagrant. |
+| `make down` | Arrête proprement la machine virtuelle Vagrant. |
+| `make provision` | Réapprovisionne la machine virtuelle Vagrant si les scripts ont été mis à jour. |
+| `make fclean` | Supprime la machine virtuelle Vagrant ainsi que ses fichiers de cache. |
+| `make test` | Exécute des requêtes `curl` sur chaque application afin de vérifier que le routage basé sur l’hôte fonctionne correctement. |
+| `make help` | Affiche la liste des commandes disponibles. |
 
 ### Validation
 
-Run the following commands to verify that the environment is working correctly:
+Exécutez les commandes suivantes pour vérifier que l’environnement fonctionne correctement :
 
 ```bash
 kubectl get pods -o wide
@@ -86,18 +85,18 @@ kubectl get ingress
 make test
 ```
 
-Expected result:
+Résultat attendu :
 
-- All Pods should be in the `Running` state.
-- The application `app2` should have **3 running replicas**.
-- The Services for `app1`, `app2`, and `app3` should be listed correctly.
-- The Ingress resource should be present and route requests based on the requested host.
-- `make test` should confirm that:
-  - requests to `app1.local` return **app1**
-  - requests to `app2.local` return **app2**
-  - requests to `app3.local` return **app3**
+- Tous les Pods doivent être dans l’état `Running`.
+- L’application `app2` doit avoir **3 réplicas en cours d’exécution**.
+- Les Services de `app1`, `app2` et `app3` doivent être correctement listés.
+- La ressource Ingress doit être présente et router les requêtes selon l’hôte demandé.
+- `make test` doit confirmer que :
+  - les requêtes vers `app1.local` renvoient **app1**
+  - les requêtes vers `app2.local` renvoient **app2**
+  - les requêtes vers `app3.local` renvoient **app3**
 
-## Project Structure
+## Structure du projet
 
 ```text
 p2
@@ -123,7 +122,7 @@ p2
 ```text
                          +----------------------+
                          |   192.168.56.110     |
-                         |   Single-node K3s    |
+                         |   K3s à nœud unique  |
                          +----------+-----------+
                                     |
                                     v
@@ -135,8 +134,9 @@ p2
         |                           |                           |
         v                           v                           v
 +---------------+           +---------------+           +---------------+
-| Host:         |           | Host:         |           | Default Host  |
-| app1.local    |           | app2.local    |           | app3.local    |
+| Hôte :        |           | Hôte :        |           | Hôte par      |
+| app1.local    |           | app2.local    |           | défaut        |
+|               |           |               |           | app3.local    |
 +-------+-------+           +-------+-------+           +-------+-------+
         |                           |                           |
         v                           v                           v
@@ -147,11 +147,11 @@ p2
         v                           v                           v
 +---------------+           +---------------+           +---------------+
 | Pod app1      |           | Pod app2-x3   |           | Pod app3      |
-| 1 replica     |           | 3 replicas    |           | 1 replica     |
+| 1 réplica     |           | 3 réplicas    |           | 1 réplica     |
 +---------------+           +---------------+           +---------------+
 ```
 
-## Resources
+## Ressources
 
 ### Image
 
@@ -159,26 +159,26 @@ p2
 
 ### Articles
 
-* [Kubernetes Pods: create, observe, and understand their lifecycle](https://blog.stephane-robert.info/docs/conteneurs/orchestrateurs/kubernetes/pods/)
-* [Kubernetes Deployments: deploy and update your applications](https://blog.stephane-robert.info/docs/conteneurs/orchestrateurs/kubernetes/deployments/)
-* [Kubernetes Services: expose and connect your applications](https://blog.stephane-robert.info/docs/conteneurs/orchestrateurs/kubernetes/services/)
-* [Kubernetes Manifests: write, validate, and fix them quickly](https://blog.stephane-robert.info/docs/conteneurs/orchestrateurs/kubernetes/ecrire-manifests/)
-* [How to connect to Kubernetes Pods](https://blog.stephane-robert.info/docs/conteneurs/orchestrateurs/outils/kubectl-exec-debug/)
-* [Kubernetes Ingress: expose your HTTP/HTTPS applications](https://blog.stephane-robert.info/docs/conteneurs/orchestrateurs/kubernetes/ingress/)
+* [Pods Kubernetes : créer, observer et comprendre leur cycle de vie](https://blog.stephane-robert.info/docs/conteneurs/orchestrateurs/kubernetes/pods/)
+* [Deployments Kubernetes : déployer et mettre à jour vos applications](https://blog.stephane-robert.info/docs/conteneurs/orchestrateurs/kubernetes/deployments/)
+* [Services Kubernetes : exposer et connecter vos applications](https://blog.stephane-robert.info/docs/conteneurs/orchestrateurs/kubernetes/services/)
+* [Manifests Kubernetes : écrire, valider et corriger rapidement vos manifests](https://blog.stephane-robert.info/docs/conteneurs/orchestrateurs/kubernetes/ecrire-manifests/)
+* [Comment se connecter aux Pods Kubernetes](https://blog.stephane-robert.info/docs/conteneurs/orchestrateurs/outils/kubectl-exec-debug/)
+* [Ingress Kubernetes : exposer vos applications HTTP/HTTPS](https://blog.stephane-robert.info/docs/conteneurs/orchestrateurs/kubernetes/ingress/)
 
-### Videos
+### Vidéos
 
-* [Kubernetes 005 - What is a Pod?](https://www.youtube.com/watch?v=maD16sgsFTY&list=PLn6POgpklwWo6wiy2G3SjBubF6zXjksap&index=7)
-* [Kubernetes 016 - What is a Deployment?](https://www.youtube.com/watch?v=AFEU_mBbzr0&list=PLn6POgpklwWo6wiy2G3SjBubF6zXjksap&index=18)
-* [Kubernetes 018 - What is a Service? (objectives, ClusterIP, expose...)](https://www.youtube.com/watch?v=Z62WCbIIWyg&list=PLn6POgpklwWo6wiy2G3SjBubF6zXjksap&index=20)
+* [Kubernetes 005 - Qu’est-ce qu’un Pod ?](https://www.youtube.com/watch?v=maD16sgsFTY&list=PLn6POgpklwWo6wiy2G3SjBubF6zXjksap&index=7)
+* [Kubernetes 016 - Qu’est-ce qu’un Deployment ?](https://www.youtube.com/watch?v=AFEU_mBbzr0&list=PLn6POgpklwWo6wiy2G3SjBubF6zXjksap&index=18)
+* [Kubernetes 018 - Qu’est-ce qu’un Service ? (objectifs, ClusterIP, exposition...)](https://www.youtube.com/watch?v=Z62WCbIIWyg&list=PLn6POgpklwWo6wiy2G3SjBubF6zXjksap&index=20)
 
-## AI Usage
+## Utilisation de l’IA
 
-I mainly used AI to help me understand concepts, generate diagrams, and create quizzes.
+J’ai principalement utilisé l’IA pour m’aider à comprendre certains concepts, générer des schémas et créer des quiz.
 
-## Author
+## Auteur
 
-* **Login:** jmougel
-* **GitHub:** [jasonmgl](https://github.com/jasonmgl)
+* **Login :** jmougel
+* **GitHub :** [jasonmgl](https://github.com/jasonmgl)
 
-[Back](../README.md)
+[Retour](../README.md)

@@ -1,45 +1,45 @@
-# Part 3 - Use K3d and Argo CD for Continuous Deployment
+# Partie 3 - Utiliser K3d et Argo CD pour le déploiement continu
 
-*This project was created as part of the 42 curriculum by jmougel, klombard, and mmorot.*
+*Ce projet a été réalisé dans le cadre du cursus 42 par jmougel, klombard et mmorot.*
 
-[Back](../README.md)
+[Retour](../README.md)
 
 ## Description
 
-Part 3 of this project consists of setting up a first **Continuous Deployment** workflow using **Argo CD**.
+La partie 3 de ce projet consiste à mettre en place un premier workflow de **déploiement continu** avec **Argo CD**.
 
-The first step is to create a **K3d** cluster, which runs a **K3s** cluster inside Docker containers and avoids the need for a virtual machine. Then, two namespaces must be created:
+La première étape consiste à créer un cluster **K3d**, qui exécute un cluster **K3s** à l’intérieur de conteneurs Docker et évite ainsi d’avoir recours à une machine virtuelle. Ensuite, deux namespaces doivent être créés :
 
-* **argocd**, which contains Argo CD
-* **dev**, which contains the application monitored and deployed by Argo CD from a GitHub repository
+* **argocd**, qui contient Argo CD
+* **dev**, qui contient l’application surveillée et déployée par Argo CD depuis un dépôt GitHub
 
-The goal is to verify that Argo CD automatically synchronizes the cluster state with the Kubernetes manifests stored in the GitHub repository.  
-When the Deployment definition is updated in the repository, the application is automatically updated in the cluster.
+L’objectif est de vérifier qu’Argo CD synchronise automatiquement l’état du cluster avec les manifests Kubernetes stockés dans le dépôt GitHub.  
+Lorsque la définition du Deployment est mise à jour dans le dépôt, l’application est automatiquement mise à jour dans le cluster.
 
-### Manifest Types Used
+### Types de manifests utilisés
 
-* **Deployment**: used to deploy and manage an application by creating and maintaining ReplicaSets and Pods.
-* **Service**: used to provide a stable network endpoint for a set of Pods and make the application reachable from within the cluster.
-* **Ingress**: used to route external HTTP requests to the appropriate Service based on the requested host.
-* **Namespace**: used to logically organize and separate resources inside a Kubernetes cluster. It is mainly intended for organization rather than full network isolation, since applications from different namespaces can still communicate with each other by default.
+* **Deployment** : utilisé pour déployer et gérer une application en créant et en maintenant des ReplicaSets et des Pods.
+* **Service** : utilisé pour fournir un point d’accès réseau stable à un ensemble de Pods et rendre l’application accessible depuis l’intérieur du cluster.
+* **Ingress** : utilisé pour router les requêtes HTTP externes vers le Service approprié selon l’hôte demandé.
+* **Namespace** : utilisé pour organiser et séparer logiquement les ressources à l’intérieur d’un cluster Kubernetes. Il sert principalement à l’organisation plutôt qu’à une isolation réseau complète, puisque les applications de différents namespaces peuvent toujours communiquer entre elles par défaut.
 
-The Docker images used for this exercise are:
+Les images Docker utilisées pour cet exercice sont :
 
 * `wil42/playground:v1`
 * `wil42/playground:v2`
 
-## Constraints
+## Contraintes
 
-* Create two namespaces:
-  * The first one must be dedicated to Argo CD.
-  * The second one must be named **dev** and contain an application automatically deployed by Argo CD from your public GitHub repository.
-* You may use the prebuilt application provided by Wil, available on Docker Hub.
-* You must be able to change the version from your public GitHub repository and verify that the application is updated correctly.
+* Créer deux namespaces :
+  * Le premier doit être dédié à Argo CD.
+  * Le second doit s’appeler **dev** et contenir une application déployée automatiquement par Argo CD depuis votre dépôt GitHub public.
+* Vous pouvez utiliser l’application préconstruite fournie par Wil, disponible sur Docker Hub.
+* Vous devez être capable de modifier la version depuis votre dépôt GitHub public et de vérifier que l’application a bien été mise à jour.
 
-## Tech Stack
+## Stack technique
 
-* **Languages:** Bash, YAML
-* **Tools:** K3d, Docker, Argo CD
+* **Langages :** Bash, YAML
+* **Outils :** K3d, Docker, Argo CD
 
 ## Instructions
 
@@ -51,54 +51,54 @@ cd InceptionOfThings/p3
 make up
 ```
 
-Make sure the following tools are installed on your system:
+Assurez-vous que les outils suivants sont installés sur votre système :
 
 * Make
 
-Make sure the following entries are present in your `/etc/hosts` file:
+Assurez-vous que les entrées suivantes sont présentes dans votre fichier `/etc/hosts` :
 
-| IP Address | Hosts |
+| Adresse IP | Hôtes |
 |------------|-------|
 | `127.0.0.1` | `argocd.local`, `jmougel.local` |
 
-A `.env.sample` file is provided to help customize the local environment.
+Un fichier `.env.sample` est fourni pour vous aider à personnaliser l’environnement local.
 
-### Usage
+### Utilisation
 
-A **Makefile** is provided to make the project easier to run. The following commands are available:
+Un **Makefile** est fourni pour faciliter l’exécution du projet. Les commandes suivantes sont disponibles :
 
-| Command | Description |
+| Commande | Description |
 |---------|-------------|
-| `make re` | Runs `make purge` and then `make up`. |
-| `make up` | Installs the required environment for the project and starts the K3d cluster. |
-| `make purge` | Completely removes the tools installed by the setup script and uninstalls Docker from the host machine. Use this command with caution. |
-| `make help` | Displays the list of available commands. |
+| `make re` | Exécute `make purge` puis `make up`. |
+| `make up` | Installe l’environnement nécessaire au projet et démarre le cluster K3d. |
+| `make purge` | Supprime complètement les outils installés par le script de configuration et désinstalle Docker de la machine hôte. Utilisez cette commande avec précaution. |
+| `make help` | Affiche la liste des commandes disponibles. |
 
 ### Dashboard
 
-Go to the following address to access the Argo CD dashboard:
+Rendez-vous à l’adresse suivante pour accéder au dashboard Argo CD :
 
 ```text
 http://argocd.local/
 ```
 
-### Application Access
+### Accès à l’application
 
-Go to the following address to access the application deployed by Argo CD:
+Rendez-vous à l’adresse suivante pour accéder à l’application déployée par Argo CD :
 
 ```text
 http://jmougel.local/
 ```
 
-### Credentials
+### Identifiants
 
-For demonstration purposes, the default credentials used in this project are:
+À des fins de démonstration, les identifiants par défaut utilisés dans ce projet sont :
 
 * **Argo CD** — `admin` / `adminadmin`
 
 ## Validation
 
-You can verify that the environment is running correctly with:
+Vous pouvez vérifier que l’environnement fonctionne correctement avec :
 
 ```bash
 kubectl get namespaces
@@ -107,16 +107,16 @@ kubectl get pods -n dev
 kubectl get ingress -A
 ```
 
-Expected result:
+Résultat attendu :
 
-- The `argocd` and `dev` namespaces should exist.
-- All Pods in the `argocd` namespace should be in the `Running` state.
-- The application Pod in the `dev` namespace should be in the `Running` state.
-- The Ingress resources should be present and correctly exposed.
-- The Argo CD dashboard should be reachable at `http://argocd.local/`.
-- The application deployed by Argo CD should be reachable at `http://jmougel.local/`.
+- Les namespaces `argocd` et `dev` doivent exister.
+- Tous les Pods dans le namespace `argocd` doivent être dans l’état `Running`.
+- Le Pod de l’application dans le namespace `dev` doit être dans l’état `Running`.
+- Les ressources Ingress doivent être présentes et correctement exposées.
+- Le dashboard Argo CD doit être accessible à l’adresse `http://argocd.local/`.
+- L’application déployée par Argo CD doit être accessible à l’adresse `http://jmougel.local/`.
 
-## Project Structure
+## Structure du projet
 
 ```text
 p3
@@ -136,33 +136,33 @@ p3
     └── k3d-config.yaml
 ```
 
-## Resources
+## Ressources
 
 ### Images
 
-![K3d project structure](https://i.postimg.cc/7PVdqGrF/Screenshot-from-2026-04-10-17-26-47.png)
-![K3d structure](https://tse3.mm.bing.net/th/id/OIP.7MD59m547aIA46rnCg4w5gHaDf?pid=Api)
+![Structure du projet K3d](https://i.postimg.cc/7PVdqGrF/Screenshot-from-2026-04-10-17-26-47.png)
+![Structure K3d](https://tse3.mm.bing.net/th/id/OIP.7MD59m547aIA46rnCg4w5gHaDf?pid=Api)
 
 ### Articles
 
-* [Create local Kubernetes clusters with K3d](https://blog.stephane-robert.info/docs/conteneurs/orchestrateurs/k3d/)
-* [Kubernetes Namespaces: organize and logically isolate your resources](https://blog.stephane-robert.info/docs/conteneurs/orchestrateurs/kubernetes/namespaces/)
-* [Argo CD Documentation](https://argo-cd.readthedocs.io/en/stable/)
-* [Argo CD — Secure your GitOps deployment](https://blog.stephane-robert.info/docs/pipeline-cicd/argocd/securiser/)
-* [Install Argo CD on Kubernetes](https://blog.stephane-robert.info/docs/pipeline-cicd/argocd/installation/)
-* [Argo CD — Deploy your first application](https://blog.stephane-robert.info/docs/pipeline-cicd/argocd/premiere-application/)
+* [Créer des clusters Kubernetes locaux avec K3d](https://blog.stephane-robert.info/docs/conteneurs/orchestrateurs/k3d/)
+* [Namespaces Kubernetes : organiser et isoler logiquement vos ressources](https://blog.stephane-robert.info/docs/conteneurs/orchestrateurs/kubernetes/namespaces/)
+* [Documentation Argo CD](https://argo-cd.readthedocs.io/en/stable/)
+* [Argo CD — Sécuriser votre déploiement GitOps](https://blog.stephane-robert.info/docs/pipeline-cicd/argocd/securiser/)
+* [Installer Argo CD sur Kubernetes](https://blog.stephane-robert.info/docs/pipeline-cicd/argocd/installation/)
+* [Argo CD — Déployer votre première application](https://blog.stephane-robert.info/docs/pipeline-cicd/argocd/premiere-application/)
 
-### Videos
+### Vidéos
 
 * [Namespaces and Contexts - #Kubernetes 13](https://www.youtube.com/watch?v=KthldM3Y4lg)
 
-## AI Usage
+## Utilisation de l’IA
 
-I mainly used AI to help me understand concepts, generate diagrams, and create quizzes.
+J’ai principalement utilisé l’IA pour m’aider à comprendre certains concepts, générer des schémas et créer des quiz.
 
-## Author
+## Auteur
 
-* **Login:** jmougel
-* **GitHub:** [jasonmgl](https://github.com/jasonmgl)
+* **Login :** jmougel
+* **GitHub :** [jasonmgl](https://github.com/jasonmgl)
 
-[Back](../README.md)
+[Retour](../README.md)

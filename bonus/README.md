@@ -1,53 +1,53 @@
-# Bonus - Local GitLab, Argo CD, and Helm on K3d
+# Bonus - GitLab local, Argo CD et Helm sur K3d
 
-*This project was created as part of the 42 curriculum by jmougel, klombard, and mmorot.*
+*Ce projet a été réalisé dans le cadre du cursus 42 par jmougel, klombard et mmorot.*
 
-[Back](../README.md)
+[Retour](../README.md)
 
 ## Description
 
-The bonus part of this project consists of reproducing the [Part 3](../p3/README.md) setup, but this time using a local GitLab instance instead of a public GitHub repository.
+La partie bonus de ce projet consiste à reproduire l’environnement de la [Partie 3](../p3/README.md), mais cette fois en utilisant une instance **GitLab locale** au lieu d’un dépôt GitHub public.
 
-This part also introduces **Helm**, which can be used to simplify the installation and upgrade of applications on Kubernetes.
+Cette partie introduit également **Helm**, qui peut être utilisé pour simplifier l’installation et la mise à jour d’applications sur Kubernetes.
 
-**Helm** is a package manager for Kubernetes. It simplifies application installation, upgrade, and removal by generating the required manifests and allowing chart values to be customized through a `values.yaml` file.
+**Helm** est un gestionnaire de paquets pour Kubernetes. Il simplifie l’installation, la mise à jour et la suppression d’applications en générant les manifests nécessaires et en permettant de personnaliser les valeurs des charts via un fichier `values.yaml`.
 
-The first step is to create a **K3d** cluster, which runs a **K3s** cluster inside Docker containers and avoids the need for a virtual machine. Then, three namespaces must be created:
+La première étape consiste à créer un cluster **K3d**, qui exécute un cluster **K3s** à l’intérieur de conteneurs Docker et évite ainsi d’avoir recours à une machine virtuelle. Ensuite, trois namespaces doivent être créés :
 
-* **argocd**, which contains Argo CD
-* **gitlab**, which contains GitLab
-* **dev**, which contains the application monitored and deployed by Argo CD from a local GitLab repository
+* **argocd**, qui contient Argo CD
+* **gitlab**, qui contient GitLab
+* **dev**, qui contient l’application surveillée et déployée par Argo CD depuis un dépôt GitLab local
 
-**MinIO** is used as an S3-compatible object storage service required by the local GitLab setup.
+**MinIO** est utilisé comme service de stockage objet compatible S3, requis par l’installation locale de GitLab.
 
-The goal is to verify that Argo CD automatically synchronizes the cluster state with the Kubernetes manifests stored in the GitLab repository.  
-When the Deployment definition is updated in the repository, the application is automatically updated in the cluster.
+L’objectif est de vérifier qu’Argo CD synchronise automatiquement l’état du cluster avec les manifests Kubernetes stockés dans le dépôt GitLab.  
+Lorsque la définition du Deployment est mise à jour dans le dépôt, l’application est automatiquement mise à jour dans le cluster.
 
-### Manifest Types Used
+### Types de manifests utilisés
 
-* **Deployment**: used to deploy and manage an application by creating and maintaining ReplicaSets and Pods.
-* **Service**: used to provide a stable network endpoint for a set of Pods and make the application reachable from within the cluster.
-* **Ingress**: used to route external HTTP requests to the appropriate Service based on the requested host.
-* **Namespace**: used to logically organize and separate resources inside a Kubernetes cluster. It is mainly intended for organization rather than full network isolation, since applications from different namespaces can still communicate with each other by default.
+* **Deployment** : utilisé pour déployer et gérer une application en créant et en maintenant des ReplicaSets et des Pods.
+* **Service** : utilisé pour fournir un point d’accès réseau stable à un ensemble de Pods et rendre l’application accessible depuis l’intérieur du cluster.
+* **Ingress** : utilisé pour router les requêtes HTTP externes vers le Service approprié selon l’hôte demandé.
+* **Namespace** : utilisé pour organiser et séparer logiquement les ressources à l’intérieur d’un cluster Kubernetes. Il sert principalement à l’organisation plutôt qu’à une isolation réseau complète, puisque les applications de différents namespaces peuvent toujours communiquer entre elles par défaut.
 
-The Docker images used for this exercise are:
+Les images Docker utilisées pour cet exercice sont :
 
 * `wil42/playground:v1`
 * `wil42/playground:v2`
 
-## Constraints
+## Contraintes
 
-* Create three namespaces:
-  * The first one must be dedicated to Argo CD.
-  * The second one must be dedicated to GitLab.
-  * The third one must be named **dev** and contain an application automatically deployed by Argo CD from your local GitLab repository.
-* You may use the prebuilt application provided by Wil, available on Docker Hub.
-* You must be able to change the application version from your GitLab repository and verify that the application is updated correctly.
+* Créer trois namespaces :
+  * Le premier doit être dédié à Argo CD.
+  * Le second doit être dédié à GitLab.
+  * Le troisième doit s’appeler **dev** et contenir une application déployée automatiquement par Argo CD depuis votre dépôt GitLab local.
+* Vous pouvez utiliser l’application préconstruite fournie par Wil, disponible sur Docker Hub.
+* Vous devez être capable de modifier la version de l’application depuis votre dépôt GitLab et de vérifier qu’elle a bien été mise à jour.
 
-## Tech Stack
+## Stack technique
 
-* **Languages:** Bash, YAML
-* **Tools:** K3d, Docker, Argo CD, Helm, GitLab
+* **Langages :** Bash, YAML
+* **Outils :** K3d, Docker, Argo CD, Helm, GitLab
 
 ## Instructions
 
@@ -59,44 +59,45 @@ cd InceptionOfThings/bonus
 make up
 ```
 
-Make sure the following tools are installed on your system:
+Assurez-vous que les outils suivants sont installés sur votre système :
 
 * Make
 
-Make sure the following entries are present in your `/etc/hosts` file:
-| IP Address | Hosts |
+Assurez-vous que les entrées suivantes sont présentes dans votre fichier `/etc/hosts` :
+
+| Adresse IP | Hôtes |
 |------------|-------|
 | `127.0.0.1` | `argocd.local`, `gitlab.local`, `minio.local`, `jmougel.local` |
 
-A `.env.sample` file is provided to help customize the local environment.
+Un fichier `.env.sample` est fourni pour vous aider à personnaliser l’environnement local.
 
-### Usage
+### Utilisation
 
-A **Makefile** is provided to make the project easier to run. The following commands are available:
+Un **Makefile** est fourni pour faciliter l’exécution du projet. Les commandes suivantes sont disponibles :
 
-| Command | Description |
+| Commande | Description |
 |---------|-------------|
-| `make re` | Runs `make purge` and then `make up`. |
-| `make up` | Installs the required environment for the project and starts the K3d cluster. |
-| `make purge` | Completely removes the tools installed by the setup script and uninstalls Docker from the host machine. Use this command with caution. |
-| `make help` | Displays the list of available commands. |
+| `make re` | Exécute `make purge` puis `make up`. |
+| `make up` | Installe l’environnement nécessaire au projet et démarre le cluster K3d. |
+| `make purge` | Supprime complètement les outils installés par le script de configuration et désinstalle Docker de la machine hôte. Utilisez cette commande avec précaution. |
+| `make help` | Affiche la liste des commandes disponibles. |
 
-### Dashboards and Access
+### Dashboards et accès
 
-All services are exposed locally through the same ingress entry point on port `8888`, using host-based routing.
+Tous les services sont exposés localement à travers le même point d’entrée Ingress sur le port `8888`, en utilisant un routage basé sur l’hôte.
 
-Go to the following address to access dashboard:
+Rendez-vous aux adresses suivantes pour accéder aux services :
 
 | Service | URL | Description |
 |---------|-----|-------------|
-| Argo CD | `http://argocd.local:8888/` | Access the Argo CD dashboard. |
-| GitLab | `http://gitlab.local:8888/` | Access the GitLab dashboard. |
-| Application | `http://jmougel.local:8888/` | Access the application monitored by Argo CD. |
-| MinIO | `http://minio.local:8888/` | Access the MinIO dashboard. |
+| Argo CD | `http://argocd.local:8888/` | Accéder au dashboard Argo CD. |
+| GitLab | `http://gitlab.local:8888/` | Accéder au dashboard GitLab. |
+| Application | `http://jmougel.local:8888/` | Accéder à l’application surveillée par Argo CD. |
+| MinIO | `http://minio.local:8888/` | Accéder au dashboard MinIO. |
 
-### Credentials
+### Identifiants
 
-For demonstration purposes, the default credentials used in this project are:
+À des fins de démonstration, les identifiants par défaut utilisés dans ce projet sont :
 
 * **Argo CD** — `admin` / `adminadmin`
 * **GitLab** — `root` / `Mmorot1234@`
@@ -104,7 +105,7 @@ For demonstration purposes, the default credentials used in this project are:
 
 ## Validation
 
-You can verify that the environment is running correctly with:
+Vous pouvez vérifier que l’environnement fonctionne correctement avec :
 
 ```bash
 kubectl get namespaces
@@ -114,19 +115,19 @@ kubectl get pods -n dev
 kubectl get ingress -A
 ```
 
-Expected result:
+Résultat attendu :
 
-- The `argocd`, `gitlab`, and `dev` namespaces should exist.
-- All Pods in the `argocd` namespace should be in the `Running` state.
-- All required Pods in the `gitlab` namespace should be created and running correctly.
-- The application Pod in the `dev` namespace should be in the `Running` state.
-- The Ingress resources should be present and correctly exposed.
-- The Argo CD dashboard should be reachable at `http://argocd.local:8888/`.
-- The GitLab dashboard should be reachable at `http://gitlab.local:8888/`.
-- The application deployed by Argo CD should be reachable at `http://jmougel.local:8888/`.
-- The MinIO dashboard should be reachable at `http://minio.local:8888/`.
+- Les namespaces `argocd`, `gitlab` et `dev` doivent exister.
+- Tous les Pods du namespace `argocd` doivent être dans l’état `Running`.
+- Tous les Pods nécessaires dans le namespace `gitlab` doivent être créés et fonctionner correctement.
+- Le Pod de l’application dans le namespace `dev` doit être dans l’état `Running`.
+- Les ressources Ingress doivent être présentes et correctement exposées.
+- Le dashboard Argo CD doit être accessible à l’adresse `http://argocd.local:8888/`.
+- Le dashboard GitLab doit être accessible à l’adresse `http://gitlab.local:8888/`.
+- L’application déployée par Argo CD doit être accessible à l’adresse `http://jmougel.local:8888/`.
+- Le dashboard MinIO doit être accessible à l’adresse `http://minio.local:8888/`.
 
-## Project Structure
+## Structure du projet
 
 ```text
 bonus
@@ -149,28 +150,28 @@ bonus
     └── k3d-config.yaml
 ```
 
-## Resources
+## Ressources
 
 ### Images
 
-![K3d project structure](https://i.postimg.cc/7PVdqGrF/Screenshot-from-2026-04-10-17-26-47.png)
-![K3d structure](https://tse3.mm.bing.net/th/id/OIP.7MD59m547aIA46rnCg4w5gHaDf?pid=Api)
+![Structure du projet K3d](https://i.postimg.cc/7PVdqGrF/Screenshot-from-2026-04-10-17-26-47.png)
+![Structure K3d](https://tse3.mm.bing.net/th/id/OIP.7MD59m547aIA46rnCg4w5gHaDf?pid=Api)
 
 ### Articles
 
-* [Helm install: deploy and manage your releases](https://blog.stephane-robert.info/docs/conteneurs/orchestrateurs/outils/helm/install-releases/#_top)
-* [Helm in 15 minutes: install and deploy your first chart](https://blog.stephane-robert.info/docs/conteneurs/orchestrateurs/outils/helm/introduction/)
-* [Helm repositories: add, search, and inspect charts](https://blog.stephane-robert.info/docs/conteneurs/orchestrateurs/outils/helm/repos-charts/)
-* [Helm values: customize charts properly with -f and --set](https://blog.stephane-robert.info/docs/conteneurs/orchestrateurs/outils/helm/values/)
-* [MinIO : stockage objet S3-compatible](https://blog.stephane-robert.info/docs/services/stockage/minio/)
+* [Helm install : déployer et gérer vos releases](https://blog.stephane-robert.info/docs/conteneurs/orchestrateurs/outils/helm/install-releases/#_top)
+* [Helm en 15 minutes : installer et déployer votre premier chart](https://blog.stephane-robert.info/docs/conteneurs/orchestrateurs/outils/helm/introduction/)
+* [Repos Helm : ajouter, rechercher et inspecter des charts](https://blog.stephane-robert.info/docs/conteneurs/orchestrateurs/outils/helm/repos-charts/)
+* [Values Helm : personnaliser vos charts proprement avec -f et --set](https://blog.stephane-robert.info/docs/conteneurs/orchestrateurs/outils/helm/values/)
+* [MinIO : stockage objet compatible S3](https://blog.stephane-robert.info/docs/services/stockage/minio/)
 
-## AI Usage
+## Utilisation de l’IA
 
-I mainly used AI to help me understand concepts, generate diagrams, and create quizzes.
+J’ai principalement utilisé l’IA pour m’aider à comprendre certains concepts, générer des schémas et créer des quiz.
 
-## Author
+## Auteur
 
-* **Login:** jmougel
-* **GitHub:** [jasonmgl](https://github.com/jasonmgl)
+* **Login :** jmougel
+* **GitHub :** [jasonmgl](https://github.com/jasonmgl)
 
-[Back](../README.md)
+[Retour](../README.md)

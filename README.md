@@ -1,33 +1,33 @@
 # Inception Of Things
 
-*This project was created as part of the 42 curriculum by jmougel, klombard, and mmorot.*
+*Ce projet a été réalisé dans le cadre du cursus 42 par jmougel, klombard et mmorot.*
 
 ## Description
 
-The goal of this project is to discover Kubernetes through a progressive approach using **K3s**, **K3d**, **Vagrant**, **Argo CD**, and **Helm**.
+Le but de ce projet est de découvrir Kubernetes à travers une approche progressive en utilisant **K3s**, **K3d**, **Vagrant**, **Argo CD** et **Helm**.
 
-It is divided into three main parts and one bonus part:
+Il est divisé en trois parties principales et une partie bonus :
 
-| Parts | Description |
+| Parties | Description |
 |---------|-------------|
-| **P1** | Build and provision a 2-node K3s cluster with Vagrant. |
-| **P2** | Deploy multiple applications using Kubernetes manifests. |
-| **P3** | Use K3d and Argo CD to explore continuous deployment. |
-| **Bonus** |  Local GitLab, Argo CD, and Helm on K3d. |
+| **P1** | Construire et approvisionner un cluster K3s à 2 nœuds avec Vagrant. |
+| **P2** | Déployer plusieurs applications à l’aide de manifests Kubernetes. |
+| **P3** | Utiliser K3d et Argo CD pour découvrir le déploiement continu. |
+| **Bonus** | GitLab local, Argo CD et Helm sur K3d. |
 
-## Tech Stack
+## Stack technique
 
-* **Languages:** Bash, YAML
-* **Tools:** K3s, K3d, Docker, Vagrant, Argo CD, Helm
+* **Langages :** Bash, YAML
+* **Outils :** K3s, K3d, Docker, Vagrant, Argo CD, Helm
 
-## Project Parts
+## Parties du projet
 
-* [P1: Build a 2-node K3s cluster with Vagrant](./p1/README.md)
-* [P2: Deploy apps with Kubernetes manifests](./p2/README.md)
-* [P3: Use K3d and Argo CD for continuous deployment](./p3/README.md)
-* [Bonus: Local GitLab, Argo CD, and Helm on K3d](./bonus/README.md)
+* [P1 : Construire un cluster K3s à 2 nœuds avec Vagrant](./p1/README.md)
+* [P2 : Déployer des applications avec des manifests Kubernetes](./p2/README.md)
+* [P3 : Utiliser K3d et Argo CD pour le déploiement continu](./p3/README.md)
+* [Bonus : GitLab local, Argo CD et Helm sur K3d](./bonus/README.md)
 
-Each part introduces new concepts and tools related to container orchestration and deployment automation.
+Chaque partie introduit de nouveaux concepts et outils liés à l’orchestration de conteneurs et à l’automatisation du déploiement.
 
 ## Installation
 
@@ -36,9 +36,9 @@ git clone https://github.com/jasonmgl/InceptionOfThings
 cd InceptionOfThings
 ```
 
-Refer to each part's README for its specific setup and requirements.
+Réfère-toi au README de chaque partie pour connaître sa configuration et ses prérequis spécifiques.
 
-## Project Structure
+## Structure du projet
 
 ```text
 InceptionOfThings
@@ -50,7 +50,7 @@ InceptionOfThings
 └── README.md
 ```
 
-## Author
+## Auteur
 
-* **Login:** jmougel
-* **GitHub:** [jasonmgl](https://github.com/jasonmgl)
+* **Login :** jmougel
+* **GitHub :** [jasonmgl](https://github.com/jasonmgl)

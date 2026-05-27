@@ -1,37 +1,36 @@
-# Part 1 - Build a 2-node K3s cluster with Vagrant
+# Partie 1 - Construire un cluster K3s à 2 nœuds avec Vagrant
 
-*This project was created as part of the 42 curriculum by jmougel, klombard, and mmorot.*
+*Ce projet a été réalisé dans le cadre du cursus 42 par jmougel, klombard et mmorot.*
 
-
-[Back](../README.md)
+[Retour](../README.md)
 
 ## Description
 
-Part 1 of this project consists of creating and provisioning a 2-node K3s cluster using Vagrant.
+La partie 1 de ce projet consiste à créer et approvisionner un cluster K3s à 2 nœuds à l’aide de Vagrant.
 
-Two virtual machines are deployed automatically:
-* the first one runs **K3s** in **server mode**
-* the second one joins the cluster in **agent mode**
+Deux machines virtuelles sont déployées automatiquement :
+* la première exécute **K3s** en **mode serveur**
+* la seconde rejoint le cluster en **mode agent**
 
-The goal is to build a minimal Kubernetes environment with automated provisioning and passwordless SSH access between the machines.
+L’objectif est de construire un environnement Kubernetes minimal avec un provisionnement automatisé et un accès SSH sans mot de passe entre les machines.
 
-### Constraints
+### Contraintes
 
-* Use the latest stable version of the Linux distribution of your choice as the operating system.
-* The machines must run with Vagrant.
-* The machine names must match the login of a member of your team.
-* The hostname of the first machine must end with the capital letter **S** (for **Server**).
-* The hostname of the second machine must end with **SW** (for **ServerWorker**).
-* The IP address of the first machine (**Server**) must be **192.168.56.110**.
-* The IP address of the second machine (**ServerWorker**) must be **192.168.56.111**.
-* You must be able to connect to both machines through SSH without a password.
-* **K3s** must be installed on the first machine (**Server**) in server mode.
-* **K3s** must be installed on the second machine (**ServerWorker**) in agent mode.
+* Utiliser la dernière version stable de la distribution Linux de votre choix comme système d’exploitation.
+* Les machines doivent être exécutées avec Vagrant.
+* Les noms des machines doivent correspondre au login d’un membre de votre équipe.
+* Le hostname de la première machine doit se terminer par la lettre majuscule **S** (pour **Server**).
+* Le hostname de la seconde machine doit se terminer par **SW** (pour **ServerWorker**).
+* L’adresse IP de la première machine (**Server**) doit être **192.168.56.110**.
+* L’adresse IP de la seconde machine (**ServerWorker**) doit être **192.168.56.111**.
+* Vous devez pouvoir vous connecter aux deux machines en SSH sans mot de passe.
+* **K3s** doit être installé sur la première machine (**Server**) en mode serveur.
+* **K3s** doit être installé sur la seconde machine (**ServerWorker**) en mode agent.
 
-## Tech Stack
+## Stack technique
 
-* **Languages:** Bash, YAML
-* **Tools:** Vagrant, K3s
+* **Langages :** Bash, YAML
+* **Outils :** Vagrant, K3s
 
 ## Instructions
 
@@ -43,28 +42,28 @@ cd InceptionOfThings/p1
 make up
 ```
 
-Make sure the following tools are installed on your system:
+Assurez-vous que les outils suivants sont installés sur votre système :
 
 * Make
 * Vagrant
 * VirtualBox
 
-### Usage
+### Utilisation
 
-A **Makefile** is provided to make the project easier to run. The following commands are available:
+Un **Makefile** est fourni pour faciliter l’exécution du projet. Les commandes suivantes sont disponibles :
 
-| Command | Description |
+| Commande | Description |
 |---------|-------------|
-| `make up` | Starts the Vagrant cluster. |
-| `make down` | Stops the Vagrant cluster properly. |
-| `make provision` | Reprovisions the Vagrant cluster if the scripts have been updated. |
-| `make clean` | Removes the file containing the K3s node token. |
-| `make fclean` | Runs `clean`, then removes the Vagrant virtual machines and cached files. |
-| `make help` | Displays the list of available commands. |
+| `make up` | Démarre le cluster Vagrant. |
+| `make down` | Arrête proprement le cluster Vagrant. |
+| `make provision` | Réapprovisionne le cluster Vagrant si les scripts ont été mis à jour. |
+| `make clean` | Supprime le fichier contenant le token du nœud K3s. |
+| `make fclean` | Exécute `clean`, puis supprime les machines virtuelles Vagrant et les fichiers de cache. |
+| `make help` | Affiche la liste des commandes disponibles. |
 
 ### Validation
 
-You can verify that the environment is running correctly with:
+Vous pouvez vérifier que l’environnement fonctionne correctement avec :
 
 ```bash
 vagrant status
@@ -72,15 +71,15 @@ vagrant ssh jmougelS
 sudo kubectl get nodes -o wide
 ```
 
-Expected result:
+Résultat attendu :
 
-- Both virtual machines should appear in the `running` state in `vagrant status`.
-- You should be able to connect to `jmougelS` through SSH without a password prompt.
-- The `kubectl get nodes -o wide` command should show both nodes in the `Ready` state.
-- The first node should act as the K3s server.
-- The second node should be joined to the cluster as a worker/agent node.
+- Les deux machines virtuelles doivent apparaître dans l’état `running` dans `vagrant status`.
+- Vous devez pouvoir vous connecter à `jmougelS` en SSH sans demande de mot de passe.
+- La commande `kubectl get nodes -o wide` doit afficher les deux nœuds dans l’état `Ready`.
+- Le premier nœud doit agir comme serveur K3s.
+- Le second nœud doit avoir rejoint le cluster en tant que nœud worker/agent.
 
-## Project Structure
+## Structure du projet
 
 ```text
 p1
@@ -92,34 +91,34 @@ p1
     └── install_worker.sh
 ```
 
-## Resources
+## Ressources
 
 ### Images
 
-![K3s architecture](https://framerusercontent.com/images/dWSIayJXKNQbiDmppiNvPcemA.jpeg)
+![Architecture K3s](https://framerusercontent.com/images/dWSIayJXKNQbiDmppiNvPcemA.jpeg)
 
 ### Articles
 
-* [Master Vagrant for your environments](https://blog.stephane-robert.info/docs/infra-as-code/provisionnement/vagrant/)
-* [K3s: Lightweight Kubernetes for edge, IoT, and homelab](https://blog.stephane-robert.info/docs/conteneurs/orchestrateurs/k3s/)
-* [Kubernetes Deployments: Deploy and update your applications](https://blog.stephane-robert.info/docs/conteneurs/orchestrateurs/kubernetes/deployments/)
-* [Configuration Options](https://docs.k3s.io/installation/configuration)
+* [Maîtriser Vagrant pour vos environnements](https://blog.stephane-robert.info/docs/infra-as-code/provisionnement/vagrant/)
+* [K3s : Kubernetes léger pour l’edge, l’IoT et le homelab](https://blog.stephane-robert.info/docs/conteneurs/orchestrateurs/k3s/)
+* [Deployments Kubernetes : déployer et mettre à jour vos applications](https://blog.stephane-robert.info/docs/conteneurs/orchestrateurs/kubernetes/deployments/)
+* [Options de configuration](https://docs.k3s.io/installation/configuration)
 
-### Videos
+### Vidéos
 
-* [Kubernetes 000 - Preamble: why??](https://www.youtube.com/watch?v=KViZkMialxo&list=PLn6POgpklwWo6wiy2G3SjBubF6zXjksap&index=1)
-* [Kubernetes 001 - History, context, and solutions](https://www.youtube.com/watch?v=eRH_cetVAck&list=PLn6POgpklwWo6wiy2G3SjBubF6zXjksap&index=2)
-* [Kubernetes 002 - Architecture: declarative vs imperative](https://www.youtube.com/watch?v=56i8lXmAtUw&list=PLn6POgpklwWo6wiy2G3SjBubF6zXjksap&index=3)
-* [Kubernetes 003 - Architecture diagram: how does it work?](https://www.youtube.com/watch?v=PlraENp_bMk&list=PLn6POgpklwWo6wiy2G3SjBubF6zXjksap&index=4)
-* [Kubernetes 004 - Scheduling: from ETCD to container](https://www.youtube.com/watch?v=M7o21hmxI28&list=PLn6POgpklwWo6wiy2G3SjBubF6zXjksap&index=5)
+* [Kubernetes 000 - Préambule : pourquoi ?](https://www.youtube.com/watch?v=KViZkMialxo&list=PLn6POgpklwWo6wiy2G3SjBubF6zXjksap&index=1)
+* [Kubernetes 001 - Histoire, contexte et solutions](https://www.youtube.com/watch?v=eRH_cetVAck&list=PLn6POgpklwWo6wiy2G3SjBubF6zXjksap&index=2)
+* [Kubernetes 002 - Architecture : déclaratif vs impératif](https://www.youtube.com/watch?v=56i8lXmAtUw&list=PLn6POgpklwWo6wiy2G3SjBubF6zXjksap&index=3)
+* [Kubernetes 003 - Schéma d’architecture : comment ça fonctionne ?](https://www.youtube.com/watch?v=PlraENp_bMk&list=PLn6POgpklwWo6wiy2G3SjBubF6zXjksap&index=4)
+* [Kubernetes 004 - Scheduling : de l’ETCD au conteneur](https://www.youtube.com/watch?v=M7o21hmxI28&list=PLn6POgpklwWo6wiy2G3SjBubF6zXjksap&index=5)
 
-## AI Usage
+## Utilisation de l’IA
 
-I mainly used AI to help me understand concepts, generate diagrams, and create quizzes.
+J’ai principalement utilisé l’IA pour m’aider à comprendre certains concepts, générer des schémas et créer des quiz.
 
-## Author
+## Auteur
 
-* **Login:** jmougel
-* **GitHub:** [jasonmgl](https://github.com/jasonmgl)
+* **Login :** jmougel
+* **GitHub :** [jasonmgl](https://github.com/jasonmgl)
 
-[Back](../README.md)
+[Retour](../README.md)
